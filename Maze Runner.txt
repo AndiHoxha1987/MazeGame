@@ -1,0 +1,133 @@
+import java.util.*;
+public class  MazeRunner {
+    static Maze myMap = new Maze();
+
+    public static void main(String[] args) {
+        intro();
+        myMap.printMap();
+        System.out.println("---------------------------------------");
+        String s1, s2, s3, s4;
+        s3 ="T";
+        s4 = "T";
+        int k = 0;
+        while(s3.equalsIgnoreCase("T")&& s4.equalsIgnoreCase("T")){
+            s1 =userMove();
+            s2 = canIMove(s1);
+           move(s2);
+           navigatePit(s2);
+           k++;
+           if(myMap.didIWin()==false){
+               s3="T";
+           }else {
+               s3="F";//System.exit(0);//perdoret per te mbyllur programin direkt
+
+               System.out.println("Congratulations, you made it out alive!");
+               System.out.println("and you did it in "+k +" moves");
+           }
+            s4=movesMessage(k);
+        }
+
+    }
+        public static String movesMessage( int x) {
+            while (x == 50) {
+                System.out.println("Warning: You have made 50 moves, you have 50 remaining before the maze exit closes");
+                x++;
+            }
+            while (x == 75) {
+                System.out.println("Alert! You have made 75 moves, you only have 25 moves left to escape.");
+                x++;
+            }
+            while (x == 90) {
+                System.out.println("DANGER! You have made 90 moves, you only have 10 moves left to escape!!");
+                x++;
+            }
+            while (x == 100) {
+                System.out.println("Oh no! You took too long to escape, and now the maze exit is closed FOREVER >:[");
+                System.out.println("Sorry, but you didn't escape in time- you lose!");
+                return ("F");
+                //System.exit(0); //perdoret per te mbyllur programin direkt
+
+            }
+            return ("T");
+        }
+
+        public static void intro () {
+            System.out.println("Welcome to Maze Runner!");
+            System.out.println("Here is your current position:");
+
+        }
+
+        public static String userMove () {
+            System.out.println("Where would you like to move? (R, L, U, D)");
+            Scanner input = new Scanner(System.in);
+            String moveDirection = input.next();
+            if (moveDirection.equalsIgnoreCase("R") || moveDirection.equalsIgnoreCase("L") || moveDirection.equalsIgnoreCase("U") || moveDirection.equalsIgnoreCase("D")) {
+                return moveDirection;
+            } else {
+                System.out.println("Sorry, Only one of these letters is accepted (R,L,U,D)");
+                return userMove();
+            }
+        }
+
+        public static String canIMove (String userMove){
+            if (userMove.equalsIgnoreCase("R") && myMap.canIMoveRight()) {
+                System.out.println("Yes u can move");// Returns true if the space to the right is free, false if there is a wall
+                return ("R");
+            } else if (userMove.equalsIgnoreCase("L") && myMap.canIMoveLeft()) {
+                System.out.println("Yes u can move");// Returns true if the space to the left is free, false if there is a wall
+                return ("L");
+            } else if (userMove.equalsIgnoreCase("U") && myMap.canIMoveUp()) {
+                System.out.println("Yes u can move");// Returns true if the space above is free, false if there is a wall
+                return ("U");
+            } else if (userMove.equalsIgnoreCase("D") && myMap.canIMoveDown()) {
+                System.out.println("Yes u can move");// Returns true if the space below is free, false if there is a wall
+                return ("D");
+            } else {
+                System.out.println("Sorry, you’ve hit a wall.");
+                System.exit(0);
+                return ("False");
+            }
+        }
+
+        public static String move (String abc){
+            if (abc.equalsIgnoreCase("R")) {
+                myMap.moveRight();// Moves your position one to the right and prints out the new board
+                myMap.printMap();
+                return ("T");
+            } else if (abc.equalsIgnoreCase("L")) {
+                myMap.moveLeft(); // Moves your position one to the left and prints out the new board
+                myMap.printMap();
+                return ("T");
+            } else if (abc.equalsIgnoreCase("U")) {
+                myMap.moveUp();// Moves your position one above and prints out the new board
+                myMap.printMap();
+                return ("T");
+            } else if (abc.equalsIgnoreCase("D")) {
+                myMap.moveDown(); // Moves your position one below and prints out the new board
+                myMap.printMap();
+                return ("T");
+            } else {
+                return ("F");
+            }
+        }
+
+        public static void navigatePit(String abc) {
+            Scanner input = new Scanner(System.in);
+            if (myMap.isThereAPit(abc) == true) {
+                System.out.println("Watch out! There's a pit ahead, jump it?");
+                String jump = input.next();
+                if (jump.startsWith("y") || jump.startsWith("yes")) {
+                    myMap.jumpOverPit(abc);
+                    myMap.printMap();
+                } else {
+                    System.out.println("Sorry, u didn't jump! You Lose");
+                    System.exit(0);
+                }
+
+            }
+
+        }
+
+
+    }
+
